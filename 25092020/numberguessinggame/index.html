@@ -28,7 +28,8 @@
 <body>
     <h1>Number guessing game</h1>
 
-    <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you
+    <p id="rules">We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer.
+        We'll tell you
         if your guess was too high or too low.</p>
     <div class="form">
         <label for="guessField">Enter a guess:</label>
@@ -48,11 +49,13 @@
         const lastResult = document.querySelector('.lastResult');
         const lowOrHi = document.querySelector('.lowOrHi');
 
+        const rules = document.querySelector('#rules');
+
         const guessSubmit = document.querySelector('.guessSubmit');
         const guessField = document.querySelector('.guessField');
 
-        let guessCount = 1;
-        let resetButton;
+        // let guessCount = 1;
+        // let resetButton;
         guessField.focus();
 
         // luokat
@@ -60,12 +63,11 @@
         class Game {
             constructor() {
                 this.resetGame();
-                this.set
                 // this.randomNumber = 34;
-                this.guessCount = 1;
-                this.resetButton;
-                console.log(this.randomNumber);
-                this.randomNumber = this.getRandomNumber();
+                // this.guessCount = 1;
+                // this.resetButton;
+                // console.log(this.randomNumber);
+                // this.randomNumber = this.getRandomNumber();
 
             }
 
@@ -73,7 +75,7 @@
                 this.randomNumber = this.getRandomNumber();
                 // randomNumber = Math.floor(Math.random() * 100) + 1;
 
-                guessCount = 1;
+                this.guessCount = 1;
                 this.resetButton;
 
                 const resetParas = document.querySelectorAll('.resultParas p');
@@ -81,7 +83,7 @@
                     resetParas[i].textContent = '';
                 }
                 if (this.resetButton) {
-                    this.resetButton.parentNode.removeChild(resetButton);
+                    this.resetButton.parentNode.removeChild(this.resetButton);
                 }
 
 
@@ -98,7 +100,7 @@
 
             resolveGuess() {
                 console.log("resolveGuess fired")
-                console.log(randomNumber)
+                console.log(this.randomNumber)
 
                 // alert('I am place\holder');
                 let userGuess = Number(guessField.value);
@@ -108,7 +110,7 @@
                 }
                 guesses.textContent += userGuess + ' ';
 
-                if (userGuess === randomNumber) {
+                if (userGuess === this.randomNumber) {
                     lastResult.textContent = "Congrats you got it right!";
                     lastResult.style.backgroundColor = 'green';
                     lowOrHi.textContent = '';
@@ -119,14 +121,14 @@
                 } else {
                     lastResult.textContent = "Wrong!";
                     lastResult.style.backgroundColor = 'red';
-                    if (userGuess < randomNumber) {
+                    if (userGuess < this.randomNumber) {
                         lowOrHi.textContent = 'Last guess was too low!';
 
-                    } else if (userGuess > randomNumber) {
+                    } else if (userGuess > this.randomNumber) {
                         lowOrHi.textContent = 'Last guess was too high!';
                     }
                 }
-                guessCount++;
+                this.guessCount++;
                 guessField.value = '';
                 guessField.focus();
 
@@ -137,81 +139,32 @@
 
                 this.resetButton = document.createElement('button');
                 this.resetButton.textContent = 'Start new game';
-                document.body.append(resetButton);
+                document.body.append(this.resetButton);
                 this.resetButton.addEventListener('click', this.resetGame.bind(mygame));
             }
 
         }
 
-        let mygame = new Game();
+        class GameforChildren extends Game {
+            constructor() {
+                super();
+                console.log("constructor reached")
+                rules.textContent = "We have selected a random number between 1 and 10. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low."
+            }
+            // Methodin overrite perivässä luokassa
+            getRandomNumber() {
+                return Math.floor(Math.random() * 10) + 1;
+            }
+        }
+
+        let mygamee = new Game();
+        // let mygame = new GameforChildren();
 
         // event handerit lisäys
-        guessSubmit.addEventListener("click", mygame.resolveGuess.bind(mygame));
+        guessSubmit.addEventListener("click", mygamee.resolveGuess.bind(mygamee));
+        // guessSubmit.addEventListener("click", mygame.resolveGuess.bind(mygame));
 
-        // ajaa koodia
 
-
-        // "function checkGuess() {
-        //     // alert('I am place\holder');
-        //     let userGuess = Number(guessField.value);
-        //     if (guessCount === 1) {
-        //         guesses.textContent = 'Previous guesses: ';
-
-        //     }
-        //     guesses.textContent += userGuess + ' ';
-
-        //     if (userGuess === randomNumber) {
-        //         lastResult.textContent = "Congrats you got it right!";
-        //         lastResult.style.backgroundColor = 'green';
-        //         lowOrHi.textContent = '';
-        //         setGameOver();
-        //     } else if (guessCount === 10) {
-        //         lastResult.textContent = '!!! Game over!!!';
-        //         setGameOver();
-        //     } else {
-        //         lastResult.textContent = "Wrong!";
-        //         lastResult.style.backgroundColor = 'red';
-        //         if (userGuess < randomNumber) {
-        //             lowOrHi.textContent = 'Last guess was too low!';
-
-        //         } else if (userGuess > randomNumber) {
-        //             lowOrHi.textContent = 'Last guess was too high!';
-        //         }
-        //     }
-        //     guessCount++;
-        //     guessField.value = '';
-        //     guessField.focus();
-        // }
-
-        // guessSubmit.addEventListener('click', checkGuess);
-        // function setGameOver() {
-        //     guessField.disabled = true;
-        //     guessSubmit.disabled = true;
-
-        //     resetButton = document.createElement('button');
-        //     resetButton.textContent = 'Start new game';
-        //     document.body.append(resetButton);
-        //     resetButton.addEventListener('click', resetGame);
-        // }
-
-        // function resetGame() {
-        //     guessCount = 1;
-
-        //     const resetParas = document.querySelectorAll('.resultParas p');
-        //     for (let i = 0; i < resetParas.length; i++) {
-        //         resetParas[i].textContent = '';
-        //     }
-        //     resetButton.parentNode.removeChild(resetButton);
-
-        //     guessField.disabled = false;
-        //     guessSubmit.disabled = false;
-        //     guessField.value = '';
-        //     guessField.focus();
-
-        //     lastResult.style.backgroundColor = 'White';
-
-        //     randomNumber = Math.floor(Math.random() * 100) + 1;
-        // }
     </script>
 </body>
 
