@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 app.get("/hello", function (req, res) {
-    return res.status(200).json({ "message": "Hello world!" })
+    return res.status(200).json({ "message": "Hello world!!" })
 });
 
 app.listen(3000);
