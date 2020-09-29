@@ -1,3 +1,4 @@
+//hardcoded data. Will be removed when connected to real database
 var database = [];
 
 window.onload = function () {
@@ -81,4 +82,66 @@ createForm = () => {
 
 addToList = () => {
     console.log("AddToList()");
+    let typeinput = document.getElementById("type");
+    let countinput = document.getElementById("count");
+    let priceinput = document.getElementById("price");
+    let item = {
+        type: typeinput.value,
+        count: countinput.value,
+        price: priceinput.value
+    }
+    database.push(item);
+    console.log(database);
+    populateTable();
+}
+
+populateTable = () => {
+    let anchor = document.getElementById("anchor");
+    let table = document.getElementById("table");
+    if (table) {
+        anchor.removeChild(table);
+
+    }
+    let newTable = document.createElement("table");
+    newTable.setAttribute("id", "table");
+
+    //header and header row
+    let header = document.createElement("thread");
+    let headerRow = document.createElement("tr");
+
+    //type header
+    let typeHeader = document.createElement("th");
+    let typeLabel = document.createTextNode("Type");
+    typeHeader.appendChild(typeLabel);
+
+    //count header
+    let countHeader = document.createElement("th");
+    let countLabel = document.createTextNode("Count");
+    countHeader.appendChild(countLabel);
+
+    //price header
+    let priceHeader = document.createElement("th");
+    let priceLabel = document.createTextNode("Price");
+    priceHeader.appendChild(priceLabel);
+
+    headerRow.appendChild(typeHeader);
+    headerRow.appendChild(countHeader);
+    headerRow.appendChild(priceHeader);
+    header.appendChild(headerRow);
+    newTable.appendChild(header);
+
+    //Table body
+    let body = document.createElement("tbody");
+    for (let i = 0; i < database.length; i++) {
+        let tableRow = document.createElement("tr");
+        for (x in database[i]) {
+            let column = document.createElement("td");
+            let node = document.createTextNode(database[i][x]);
+            column.appendChild(node);
+            tableRow.appendChild(column);
+        }
+        body.appendChild(tableRow);
+    }
+    newTable.appendChild(body);
+    anchor.appendChild(newTable);
 }
