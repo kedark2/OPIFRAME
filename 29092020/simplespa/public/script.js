@@ -1,5 +1,6 @@
 //hardcoded data. Will be removed when connected to real database
 var database = [];
+var id = 100;
 
 window.onload = function () {
     createForm();
@@ -81,17 +82,26 @@ createForm = () => {
 }
 
 addToList = () => {
-    console.log("AddToList()");
+    console.log("addToList()");
     let typeinput = document.getElementById("type");
     let countinput = document.getElementById("count");
     let priceinput = document.getElementById("price");
     let item = {
+        id: id,
         type: typeinput.value,
         count: countinput.value,
         price: priceinput.value
     }
+    id++
     database.push(item);
     console.log(database);
+    populateTable();
+}
+
+removeFromList = (id) => {
+    console.log("removeFromList");
+    let tempId = parseInt(id, 10);
+    database = database.filter(item => item.id !== tempId);
     populateTable();
 }
 
@@ -124,9 +134,15 @@ populateTable = () => {
     let priceLabel = document.createTextNode("Price");
     priceHeader.appendChild(priceLabel);
 
+    //remove header
+    let removeHeader = document.createElement("th");
+    let removeLabel = document.createTextNode("Buy");
+    removeHeader.appendChild(removeLabel)
+
     headerRow.appendChild(typeHeader);
     headerRow.appendChild(countHeader);
     headerRow.appendChild(priceHeader);
+    headerRow.appendChild(removeHeader)
     header.appendChild(headerRow);
     newTable.appendChild(header);
 
@@ -135,11 +151,24 @@ populateTable = () => {
     for (let i = 0; i < database.length; i++) {
         let tableRow = document.createElement("tr");
         for (x in database[i]) {
+            if (x === "id") {
+                continue;
+            }
             let column = document.createElement("td");
             let node = document.createTextNode(database[i][x]);
             column.appendChild(node);
             tableRow.appendChild(column);
         }
+        let column = document.createElement("td");
+        let removeButton = document.createElement("button");
+        let removeText = document.createTextNode("Buy");
+        removeButton.appendChild(removeText);
+        removeButton.setAttribute("name", database[i].id);
+        removeButton.addEventListener("click", function (e) {
+            removeFromList(e.target.name);
+        })
+        column.appendChild(removeButton);
+        tableRow.appendChild(column)
         body.appendChild(tableRow);
     }
     newTable.appendChild(body);
