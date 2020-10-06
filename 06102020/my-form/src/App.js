@@ -10,11 +10,23 @@ class App extends React.Component {
     super(props);
     this.state = {
       contacts: [],
-      // message: ""
+      id: 100,
+      message: ""
     }
   }
   addContact = (contact) => {
+    contact.id = this.state.id;
+    let tempId = this.state.id + 1;
     let tempList = this.state.contacts.concat(contact);
+    this.setState({
+      contacts: tempList,
+      id: tempId
+    })
+  }
+
+  removeContact = (id) => {
+    let tempId = parseInt(id, 10);
+    let tempList = this.state.contacts.filter(contact => contact.id !== tempId);
     this.setState({
       contacts: tempList
     })
@@ -31,7 +43,8 @@ class App extends React.Component {
         {/* <NameForm setMessage={this.setMessage}></NameForm>
         <h3>{this.state.message}</h3>       */}
         <NameForm setMessage={this.addContact}></NameForm>
-        <ContactList contacts={this.state.contacts}></ContactList>
+        <ContactList contacts={this.state.contacts} removeContact={this.removeContact}></ContactList>
+
       </div>
     );
   }
