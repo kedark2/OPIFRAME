@@ -10,7 +10,11 @@ export default class NameForm extends React.Component {
     }
     submit = (event) => {
         event.preventDefault();
-        let name = this.state.firstname + " " + this.state.lastname;
+        let name = {
+            firstname: this.state.firstname,
+            lastname: this.state.lastname
+        }
+        // let name = this.state.firstname + " " + this.state.lastname;
         this.props.setMessage(name);
     }
 
