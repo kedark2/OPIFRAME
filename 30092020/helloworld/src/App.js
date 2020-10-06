@@ -9,6 +9,7 @@ function App() {
     <div className="App">
       <StatefulComponent></StatefulComponent>
       <Card></Card>
+      <Card></Card>
 
     </div>
   );

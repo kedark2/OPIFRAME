@@ -33,7 +33,7 @@ export default class Card extends React.Component {
         return (
             <div style={cardStyle}>
                 <Square color={this.state.color} />
-                <Label color={this.state.color} />
+                <Label color={this.state.color} onColorChange={this.changeColor} />
             </div>
         )
 
