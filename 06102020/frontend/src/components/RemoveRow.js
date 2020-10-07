@@ -13,6 +13,7 @@ export default class Row extends React.Component {
                 <Table.Cell>
                     <Button color="green"
                         onClick={() => this.props.removeFromList(this.props.item.id)}>Confirm</Button></Table.Cell>
+
             </Table.Row>
         )
     }

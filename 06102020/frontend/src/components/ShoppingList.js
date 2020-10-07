@@ -2,25 +2,47 @@ import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
 import Row from './Row'
 import RemoveRow from './RemoveRow'
+import EditRow from './EditRow'
 
 export default class ShoppingList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            removeIndex: -1
+            removeIndex: -1,
+            editIndex: -1
         }
     }
 
     cancel = () => {
         this.setState({
-            removeIndex: -1
+            removeIndex: -1,
+            editIndex: -1
         })
+    }
+    removeFromList = (id) => {
+        this.props.removeFromList(id);
+        this.cancel();
+    }
+    editItem = (item) => {
+        this.props.editItem(item);
+        this.cancel();
     }
     changeToRemoveMode = (id) => {
         for (let i = 0; i < this.props.list.length; i++) {
             if (id === this.props.list[i].id) {
                 this.setState({
-                    removeIndex: i
+                    removeIndex: i,
+                    editIndex: -1
+                })
+            }
+        }
+    }
+    changToEditMode = (id) => {
+        for (let i = 0; i < this.props.list.length; i++) {
+            if (id === this.props.list[i].id) {
+                this.setState({
+                    removeIndex: -1,
+                    editIndex: i
                 })
             }
         }
@@ -28,15 +50,27 @@ export default class ShoppingList extends React.Component {
 
     render() {
         let items = this.props.list.map((item, index) => {
+            if (this.state.editIndex == index) {
+                return (
+                    <EditRow key={item.id}
+                        item={item}
+                        cancel={this.cancel}
+                        editItem={this.editItem} />
+                )
+            }
             if (this.state.removeIndex === index) {
                 return (
                     <RemoveRow key={item.id}
-                        item={item} cancel={this.cancel}
+                        item={item}
+                        cancel={this.cancel}
                         removeFromList={this.props.removeFromList} />
                 )
             }
             return (
-                <Row key={item.id} item={item} changeToRemoveMode={this.changeToRemoveMode}></Row>
+                <Row key={item.id}
+                    item={item}
+                    changeToRemoveMode={this.changeToRemoveMode}
+                    changToEditMode={this.changToEditMode}></Row>
 
                 // <Table.Row key={item.id}>
                 //     <Table.Cell>{item.type}</Table.Cell>
