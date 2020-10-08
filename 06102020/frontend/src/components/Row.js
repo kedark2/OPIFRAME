@@ -11,12 +11,12 @@ export default class Row extends React.Component {
                 <Table.Cell>
                     <Button color="blue"
                         onClick={() => this.props.changeToRemoveMode(this.props.item.id)}>
-                        Remove</Button>
+                        Edit</Button>
                 </Table.Cell>
                 <Table.Cell>
                     <Button color="green"
                         onClick={() => this.props.changToEditMode(this.props.item.id)}>
-                        Edit</Button>
+                        Remove</Button>
                 </Table.Cell>
             </Table.Row>
         )

@@ -50,7 +50,7 @@ export default class ShoppingList extends React.Component {
 
     render() {
         let items = this.props.list.map((item, index) => {
-            if (this.state.editIndex == index) {
+            if (this.state.editIndex === index) {
                 return (
                     <EditRow key={item.id}
                         item={item}

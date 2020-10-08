@@ -3,6 +3,8 @@ import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
+import Navbar from './components/Navbar';
+import { Switch, Route } from 'react-router-dom';
 
 class App extends React.Component {
   constructor(props) {
@@ -123,11 +125,21 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <ShoppingForm addToList={this.addToList}></ShoppingForm>
+        <Navbar />
         <hr />
-        <ShoppingList list={this.state.list}
-          removeFromList={this.removeFromList}
-          editItem={this.editItem} />
+        <Switch>
+          <Route exact path="/"
+            render={() => <ShoppingList
+              list={this.state.list}
+              removeFromList={this.removeFromList}
+              editItem={this.editItem} />} />
+          <Route path="/form"
+            render={() =>
+              <ShoppingForm
+                addToList={this.addToList} />
+            } />
+        </Switch>
+
 
       </div>
     );
