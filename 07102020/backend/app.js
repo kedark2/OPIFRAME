@@ -32,7 +32,7 @@ app.post("/api/shopping", function (req, res) {
     return res.status(200).json({ message: "success" });
 })
 
-app.delete("app/api/shopping/:id", function (req, res) {
+app.delete("api/shopping/:id", function (req, res) {
     let tempId = parseInt(req.params.id, 10);
     let tempList = database.filter(item => item.id !== tempId);
     database = tempId;
