@@ -16,7 +16,15 @@ class App extends React.Component {
       token: ""
     }
   }
-
+  clearState = () => {
+    this.setState({
+      list: [],
+      isLogged: false,
+      token: ""
+    }, () => {
+      this.saveToStorage();
+    })
+  }
   componentDidMount() {
     if (sessionStorage.getItem("state")) {
       let state = JSON.parse(sessionStorage.getItem("state"));
@@ -70,10 +78,35 @@ class App extends React.Component {
           })
         }).catch(error => { console.log("Error parsing JSON:", error) })
       } else {
+        if (response.status === 403) {
+          this.clearState();
+        }
         console.log("Server responded with status:", response.status);
       }
 
     }).catch(error => console.log("Server responded with error:", error));
+  }
+
+  logout = () => {
+    let request = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-type": "application/json",
+        "token": this.state.token
+      },
+    }
+    fetch("/logout", request).then(response => {
+      response.json().then(data => {
+        this.setState({
+          isLogged: false,
+          token: "",
+          list: []
+        }, () => {
+          this.saveToStorage();
+        })
+      }).catch(error => console.log("Server responded with error:", error));
+    })
   }
 
   getList = () => {
@@ -97,6 +130,9 @@ class App extends React.Component {
           console.log("Error parsing Json", error);
         });
       } else {
+        if (response.status === 403) {
+          this.clearState();
+        }
         console.log("Server responded with status: ", response.status);
       }
     }).catch(error => {
@@ -130,6 +166,9 @@ class App extends React.Component {
         this.getList();
       }
       else {
+        if (response.status === 403) {
+          this.clearState();
+        }
         console.log("Server responded with status:", response.status);
       }
     }).catch(error => {
@@ -158,6 +197,9 @@ class App extends React.Component {
         this.getList();
       }
       else {
+        if (response.status === 403) {
+          this.clearState();
+        }
         console.log("Server responded with status", response.status);
       }
     }).catch(error => {
@@ -187,6 +229,9 @@ class App extends React.Component {
         this.getList();
       }
       else {
+        if (response.status === 403) {
+          this.clearState();
+        }
         console.log("Server responded with status", response.status);
       }
     }).catch(error => {
@@ -195,15 +240,15 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div className="App">
-        <Navbar isLogged={this.state.isLogged} />
+      <div className="App" >
+        <Navbar isLogged={this.state.isLogged} logout={this.logout} />
         <hr />
         <Switch>
           <Route exact path="/" render={() =>
             this.state.isLogged ?
               (<Redirect to="/list" />) :
-              (<LoginPage login={this.login}
-                register={this.register} />)
+              (<LoginPage
+                register={this.register} login={this.login} />)
           } />
           <Route path="/list"
             render={() => this.state.isLogged ?

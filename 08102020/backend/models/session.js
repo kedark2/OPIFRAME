@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 let Schema = mongoose.Schema({
     user: { type: String, indexed: true },
-    ttl, Number,
+    ttl: Number,
     token: String
 })
 

@@ -1,4 +1,6 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const shoppingModel = require("../models/shoppingitem");
 
 let router = express.Router();
 
@@ -9,59 +11,83 @@ let id = 500;
 
 // REST API
 router.get("/shopping", function (req, res) {
-    let tempDatabase = database.filter(item => item.user === req.session.user)
-    return res.status(200).json(database);
+    let query = { "user": req.session.user }
+    shoppingModel.find(query, function (err, items) {
+        if (err) {
+            console.log("Failed to find shoppingitems");
+            return res.status(404).json({ message: "not found" })
+        }
+        if (!items) {
+            return res.status(200).json([])
+        }
+        return res.status(200).json(items)
+    })
+    //let tempDatabase = database.filter(item => item.user === req.session.user)
+    //return res.status(200).json(database);
 })
 
 router.post("/shopping", function (req, res) {
-    let item = {
+    if (!req.body) {
+        return res.status(422).json({ message: "Please enter proper information" })
+    }
+    if (!req.body.type) {
+        return res.status(422).json({ message: "please enter proper information" })
+    }
+
+    let item = new shoppingModel({
         id: id,
         type: req.body.type,
         count: req.body.count,
         price: req.body.price,
         user: req.session.user
-    }
-    id++;
-    database.push(item);
-    return res.status(200).json({ message: "success" });
+    })
+    item.save(function (err) {
+        if (err) {
+            console.log("Failed to save item");
+            return res.status(409) - json({ message: "failed to save item" })
+
+        }
+        return res.status(200).json({ message: "success" })
+    })
 })
 
 router.delete("/shopping/:id", function (req, res) {
-    let tempId = parseInt(req.params.id, 10);
-    for (let i = 0; i < database.length; i++) {
-        if (database[i].id === tempId) {
-            if (database[i].user === req.session.user) {
-                database.splice(i, 1);
-                return res.status(200).json({ message: "success" })
-            } else {
-                return res.status(400).json({ message: "conflict" })
-            }
-
+    let query = { "_id": req.params.id, "user": req.session.user }
+    shoppingModel.deleteOne(query, function (err, item) {
+        if (err) {
+            console.log("Failed to remove item. Reason:", err);
+            return res.status(409).json({ message: "conflict" })
         }
-    }
-    return res.status(200).json({ message: "success" })
+        if (!item) {
+            return res.status(404).json({ message: "not found" })
+        }
+        return res.status(200).json({ message: "success" })
+    })
 })
 router.put("/shopping/:id", function (req, res) {
-    let tempId = parseInt(req.params.id, 10);
+    if (!req.body) {
+        return res.status(422).json({ message: "Please enter proper information" })
+    }
+    if (!req.body.type) {
+        return res.status(422).json({ message: "Please enter proper information" })
+    }
     let newItem = {
-        id: tempId,
         type: req.body.type,
         count: req.body.count,
         price: req.body.price,
         user: req.session.user
     }
-    for (let i = 0; i < database.length; i++) {
-        if (database[i].id === tempId) {
-            if (database[i].user === req.session.user) {
-                database.splice(i, newItem);
-                return res.status(200).json({ message: "success" })
-            } else {
-                return res.status(400).json({ message: "conflict" })
-            }
-
+    let query = { "_id": req.params.id, "user": req.session.user }
+    shoppingModel.replaceOne(query, newItem, function (err, item) {
+        if (err) {
+            console.log("Failed to remove item. Reason:", err);
+            return res.status(409).json({ message: "conflict" })
         }
-    }
-    return res.status(404).json({ message: "not found" })
+        if (!item) {
+            return res.status(404).json({ message: "not found" })
+        }
+        return res.status(200).json({ message: "success" })
+    })
 })
 
 

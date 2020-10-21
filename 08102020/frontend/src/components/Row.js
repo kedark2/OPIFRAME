@@ -10,13 +10,13 @@ export default class Row extends React.Component {
                 <Table.Cell>{this.props.item.price}</Table.Cell>
                 <Table.Cell>
                     <Button color="blue"
-                        onClick={() => this.props.changeToRemoveMode(this.props.item.id)}>
-                        Edit</Button>
+                        onClick={() => this.props.changeToRemoveMode(this.props.item._id)}>
+                        Remove</Button>
                 </Table.Cell>
                 <Table.Cell>
                     <Button color="green"
-                        onClick={() => this.props.changToEditMode(this.props.item.id)}>
-                        Remove</Button>
+                        onClick={() => this.props.changToEditMode(this.props.item._id)}>
+                        Edit</Button>
                 </Table.Cell>
             </Table.Row>
         )

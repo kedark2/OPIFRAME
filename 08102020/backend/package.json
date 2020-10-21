@@ -9,6 +9,8 @@
   "author": "kedar kanel",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "mysql": "^2.18.1"
   }
 }
